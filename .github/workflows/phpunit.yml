@@ -1,0 +1,58 @@
+name: "PHPUnit tests"
+
+on:
+    workflow_call:
+        inputs:
+            runs-on:
+                description: "Type of machine to run the job on"
+                default: "ubuntu-latest"
+                required: false
+                type: string
+            php-version:
+                description: "PHP version"
+                default: "7.4"
+                required: false
+                type: string
+            composer-ignore-cache:
+                description: "Ignore Composer caching"
+                default: "no"
+                required: false
+                type: boolean
+            phpunit-bin:
+                description: "Path to PHPUnit binary"
+                default: "./vendor/bin/phpunit"
+                required: false
+                type: string
+            phpunit-args:
+                description: "Set of arguments passed to PHPUnit"
+                default: ""
+                required: false
+                type: string
+
+concurrency:
+    group: "${{ github.workflow }}-${{ github.head_ref || github.run_id }}"
+    cancel-in-progress: true
+
+jobs:
+    tests:
+        name: "Tests"
+        runs-on: "${{ runs-on }}"
+
+        steps:
+            -   name: "Checkout code"
+                uses: "actions/checkout@v3"
+
+            -   name: "Install PHP"
+                uses: "shivammathur/setup-php@v2"
+                with:
+                    php-version: "${{ inputs.php-version }}"
+                    coverage: "none"
+
+            -   name: "Install dependencies with Composer"
+                uses: "ramsey/composer-install@v2"
+                with:
+                    dependency-versions: "highest"
+                    ignore-cache: "yes"
+
+            -   name: "Run PHPUnit"
+                run: "${{ inputs.phpunit-bin }} ${{ inputs.phpunit-args }}"

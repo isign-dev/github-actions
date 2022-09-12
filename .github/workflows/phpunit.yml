@@ -15,7 +15,7 @@ on:
                 type: string
             composer-ignore-cache:
                 description: "Ignore Composer caching"
-                default: "no"
+                default: false
                 required: false
                 type: boolean
             phpunit-bin:

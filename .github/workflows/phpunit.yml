@@ -36,7 +36,7 @@ concurrency:
 jobs:
     tests:
         name: "Tests"
-        runs-on: "${{ runs-on }}"
+        runs-on: "${{ inputs.runs-on }}"
 
         steps:
             -   name: "Checkout code"

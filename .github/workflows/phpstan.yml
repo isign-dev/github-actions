@@ -1,4 +1,4 @@
-name: "PHPUnit tests"
+name: "PHPStan analysis"
 
 on:
     workflow_call:
@@ -18,13 +18,13 @@ on:
                 default: false
                 required: false
                 type: "boolean"
-            phpunit-bin:
-                description: "Path to PHPUnit binary"
-                default: "./vendor/bin/phpunit"
+            phpstan-bin:
+                description: "Path to PHPStan binary"
+                default: "./vendor/bin/phpstan"
                 required: false
                 type: "string"
-            phpunit-args:
-                description: "Set of arguments passed to PHPUnit"
+            phpstan-args:
+                description: "Set of arguments passed to PHPStan"
                 default: ""
                 required: false
                 type: "string"
@@ -43,8 +43,8 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    phpunit:
-        name: "PHPUnit"
+    phpstan:
+        name: "PHPStan"
         runs-on: "${{ inputs.runs-on }}"
 
         steps:
@@ -78,8 +78,8 @@ jobs:
                     dependency-versions: "highest"
                     ignore-cache: "${{ inputs.composer-ignore-cache }}"
 
-            -   name: "Run PHPUnit"
-                run: "${{ inputs.phpunit-bin }} ${{ inputs.phpunit-args }}"
+            -   name: "Run PHPStan"
+                run: "${{ inputs.phpstan-bin }} analyse ${{ inputs.phpstan-args }}"
 
             -   name: "Remove auth.json file"
                 if: "always()"

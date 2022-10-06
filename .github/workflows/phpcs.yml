@@ -1,4 +1,4 @@
-name: "PHPUnit tests"
+name: "PHPCS checks"
 
 on:
     workflow_call:
@@ -18,13 +18,13 @@ on:
                 default: false
                 required: false
                 type: "boolean"
-            phpunit-bin:
-                description: "Path to PHPUnit binary"
-                default: "./vendor/bin/phpunit"
+            phpcs-bin:
+                description: "Path to PHPCS binary"
+                default: "./vendor/bin/phpcs"
                 required: false
                 type: "string"
-            phpunit-args:
-                description: "Set of arguments passed to PHPUnit"
+            phpcs-args:
+                description: "Set of arguments passed to PHPCS"
                 default: ""
                 required: false
                 type: "string"
@@ -43,8 +43,8 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    phpunit:
-        name: "PHPUnit"
+    phpcs:
+        name: "PHPCS"
         runs-on: "${{ inputs.runs-on }}"
 
         steps:
@@ -78,8 +78,8 @@ jobs:
                     dependency-versions: "highest"
                     ignore-cache: "${{ inputs.composer-ignore-cache }}"
 
-            -   name: "Run PHPUnit"
-                run: "${{ inputs.phpunit-bin }} ${{ inputs.phpunit-args }}"
+            -   name: "Run PHPCS"
+                run: "${{ inputs.phpcs-bin }} ${{ inputs.phpcs-args }}"
 
             -   name: "Remove auth.json file"
                 if: "always()"

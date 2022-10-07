@@ -1,0 +1,82 @@
+name: "PHPSpec tests"
+
+on:
+    workflow_call:
+        inputs:
+            runs-on:
+                description: "Type of machine to run the job on"
+                default: "ubuntu-latest"
+                required: false
+                type: "string"
+            php-version:
+                description: "PHP version"
+                default: "7.4"
+                required: false
+                type: "string"
+            composer-ignore-cache:
+                description: "Ignore Composer caching"
+                default: false
+                required: false
+                type: "boolean"
+            phpspec-bin:
+                description: "Path to PHPSpec binary"
+                default: "./vendor/bin/phpspec"
+                required: false
+                type: "string"
+            phpspec-args:
+                description: "Set of arguments passed to PHPSpec"
+                default: ""
+                required: false
+                type: "string"
+        secrets:
+            AWS_ACCESS_KEY_ID:
+                required: true
+            AWS_SECRET_ACCESS_KEY:
+                required: true
+            AWS_SECURITY_GROUP_ID:
+                required: true
+            COMPOSER_AUTH_JSON:
+                required: true
+
+jobs:
+    phpspec:
+        name: "PHPSpec"
+        runs-on: "${{ inputs.runs-on }}"
+
+        steps:
+            -   name: "Checkout code"
+                uses: "actions/checkout@v3"
+
+            -   name: "Install PHP"
+                uses: "shivammathur/setup-php@v2"
+                with:
+                    php-version: "${{ inputs.php-version }}"
+                    coverage: "none"
+
+            -   name: "Add public IP to AWS security group"
+                uses: "sohelamin/aws-security-group-add-ip-action@master"
+                with:
+                    aws-access-key-id: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+                    aws-secret-access-key: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+                    aws-region: "eu-central-1"
+                    aws-security-group-id: "${{ secrets.AWS_SECURITY_GROUP_ID }}"
+                    port: "443"
+                    to-port: "443"
+                    protocol: "tcp"
+                    description: "GitHub Action"
+
+            -   name: "Add auth.json file"
+                run: "echo '${{ secrets.COMPOSER_AUTH_JSON }}' > $GITHUB_WORKSPACE/auth.json"
+
+            -   name: "Install dependencies with Composer"
+                uses: "ramsey/composer-install@v2"
+                with:
+                    dependency-versions: "highest"
+                    ignore-cache: "${{ inputs.composer-ignore-cache }}"
+
+            -   name: "Run PHPSpec"
+                run: "${{ inputs.phpspec-bin }} run ${{ inputs.phpspec-args }}"
+
+            -   name: "Remove auth.json file"
+                if: "always()"
+                run: "rm -f $GITHUB_WORKSPACE/auth.json"

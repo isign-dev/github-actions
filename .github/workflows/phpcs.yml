@@ -65,6 +65,7 @@ jobs:
                     protocol: "tcp"
                     description: "GitHub Action"
 
+
             -   name: "Add auth.json file"
                 run: "echo '${{ secrets.COMPOSER_AUTH_JSON }}' > $GITHUB_WORKSPACE/auth.json"
 

@@ -18,6 +18,11 @@ on:
                 default: false
                 required: false
                 type: "boolean"
+            composer-root-version:
+                description: "Composer root version"
+                default: ""
+                required: false
+                type: "string"
             phpspec-bin:
                 description: "Path to PHPSpec binary"
                 default: "./vendor/bin/phpspec"
@@ -67,6 +72,11 @@ jobs:
 
             -   name: "Add auth.json file"
                 run: "echo '${{ secrets.COMPOSER_AUTH_JSON }}' > $GITHUB_WORKSPACE/auth.json"
+
+            -   name: "Set COMPOSER_ROOT_VERSION env variable"
+                run: |
+                    echo "COMPOSER_ROOT_VERSION=${{ inputs.composer-root-version }}" >> $GITHUB_ENV
+                if: "'' != inputs.composer-root-version"
 
             -   name: "Install dependencies with Composer"
                 uses: "ramsey/composer-install@v2"

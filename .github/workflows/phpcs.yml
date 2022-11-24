@@ -58,6 +58,11 @@ jobs:
                     php-version: "${{ inputs.php-version }}"
                     coverage: "none"
 
+            -   name: "Create unique ID"
+                id: "unique-id"
+                run: |
+                    echo "uuid=$(uuidgen)" >> $GITHUB_OUTPUT
+
             -   name: "Add public IP to AWS security group"
                 uses: "sohelamin/aws-security-group-add-ip-action@master"
                 with:
@@ -68,7 +73,7 @@ jobs:
                     port: "443"
                     to-port: "443"
                     protocol: "tcp"
-                    description: "GitHub Action"
+                    description: "GitHub Action ${{ steps.unique-id.outputs.uuid }}"
 
             -   name: "Add auth.json file"
                 run: "echo '${{ secrets.COMPOSER_AUTH_JSON }}' > $GITHUB_WORKSPACE/auth.json"

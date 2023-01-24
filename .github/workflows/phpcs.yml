@@ -84,7 +84,7 @@ jobs:
                 if: "'' != inputs.composer-root-version"
 
             -   name: "Fix vendors"
-                uses: "./.github/actions/composer-require-replacements"
+                uses: "isign-dev/github-actions/.github/actions/composer-require-replacements"
 
             -   name: "Install dependencies with Composer"
                 uses: "ramsey/composer-install@v2"

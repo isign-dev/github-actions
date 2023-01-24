@@ -88,8 +88,14 @@ jobs:
                     echo "COMPOSER_ROOT_VERSION=${{ inputs.composer-root-version }}" >> $GITHUB_ENV
                 if: "'' != inputs.composer-root-version"
 
+            -   name: "Check out custom actions"
+                uses: "actions/checkout@v3"
+                with:
+                    repository: "isign-dev/github-actions"
+                    path: "./.github/actions/custom-actions"
+
             -   name: "Fix vendors"
-                uses: "isign-dev/github-actions/.github/actions/composer-require-replacements"
+                uses: "./.github/actions/custom-actions/.github/actions/composer-require-replacements"
 
             -   name: "Install dependencies with Composer"
                 uses: "ramsey/composer-install@v2"

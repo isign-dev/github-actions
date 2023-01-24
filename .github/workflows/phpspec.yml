@@ -88,6 +88,9 @@ jobs:
                     echo "COMPOSER_ROOT_VERSION=${{ inputs.composer-root-version }}" >> $GITHUB_ENV
                 if: "'' != inputs.composer-root-version"
 
+            -   name: "Fix vendors"
+                uses: "./.github/actions/composer-require-replacements"
+
             -   name: "Install dependencies with Composer"
                 uses: "ramsey/composer-install@v2"
                 with:

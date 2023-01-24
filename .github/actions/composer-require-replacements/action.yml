@@ -1,0 +1,16 @@
+name: "Composer require replacements"
+description: "Replace composer.json require dependencies with configured."
+
+runs:
+    using: "composite"
+    steps:
+    -   shell: "bash"
+        run: |
+            [ -f composer.json ] \
+            && [ -f .github/composer-require-replacements.json ] \
+            && jq \
+                --slurpfile replacements .github/composer-require-replacements.json \
+                '.require = .require * $replacements[0]' \
+                composer.json \
+                > composer.fixed.json \
+            && mv composer.fixed.json composer.json

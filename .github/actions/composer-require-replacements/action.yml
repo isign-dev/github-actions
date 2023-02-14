@@ -13,4 +13,5 @@ runs:
                 '.require = .require * $replacements[0]' \
                 composer.json \
                 > composer.fixed.json \
-            && mv composer.fixed.json composer.json
+            && mv composer.fixed.json composer.json \
+            || true

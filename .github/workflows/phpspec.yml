@@ -30,7 +30,7 @@ on:
                 type: "string"
             phpspec-args:
                 description: "Set of arguments passed to PHPSpec"
-                default: ""
+                default: "-v"
                 required: false
                 type: "string"
             composer-dependency-versions:

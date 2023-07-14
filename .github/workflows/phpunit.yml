@@ -18,6 +18,11 @@ on:
                 default: ""
                 required: false
                 type: "string"
+            php-extensions:
+                description: "PHP extensions (https://github.com/shivammathur/setup-php#heavy_plus_sign-php-extension-support)"
+                default: ""
+                required: false
+                type: "string"
             symfony-version:
                 description: "Symfony version"
                 default: "4.4"
@@ -68,6 +73,7 @@ jobs:
                     php-version: "${{ inputs.php-version }}"
                     coverage: "none"
                     tools: "${{ inputs.php-tools }}"
+                    extensions: "${{ inputs.php-extensions }}"
 
             -   name: "Create unique ID"
                 id: "unique-id"

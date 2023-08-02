@@ -38,6 +38,11 @@ on:
                 default: ""
                 required: false
                 type: "string"
+            composer-dependency-versions:
+                description: "Composer dependency versions highest|locked|lowest"
+                default: "highest"
+                required: false
+                type: "string"
             phpunit-bin:
                 description: "Path to PHPUnit binary"
                 default: "./vendor/bin/phpunit"
@@ -114,7 +119,7 @@ jobs:
                 env:
                     SYMFONY_REQUIRE: "${{ inputs.symfony-version }}"
                 with:
-                    dependency-versions: "highest"
+                    dependency-versions: "${{ inputs.composer-dependency-versions }}"
                     ignore-cache: "${{ inputs.composer-ignore-cache }}"
 
             -   name: "Run PHPUnit"

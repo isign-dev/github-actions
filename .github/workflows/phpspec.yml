@@ -5,12 +5,12 @@ on:
         inputs:
             runs-on:
                 description: "Type of machine to run the job on"
-                default: "ubuntu-latest"
+                default: "ubuntu-24.04"
                 required: false
                 type: "string"
             php-version:
                 description: "PHP version"
-                default: "7.4"
+                default: "8.1"
                 required: false
                 type: "string"
             php-tools:
@@ -25,7 +25,7 @@ on:
                 type: "string"
             symfony-version:
                 description: "Symfony version"
-                default: "4.4"
+                default: "5.4"
                 required: false
                 type: "string"
             composer-ignore-cache:
@@ -70,7 +70,7 @@ jobs:
 
         steps:
             -   name: "Checkout code"
-                uses: "actions/checkout@v3"
+                uses: "actions/checkout@v4"
 
             -   name: "Install PHP"
                 uses: "shivammathur/setup-php@v2"
@@ -106,7 +106,7 @@ jobs:
                 if: "'' != inputs.composer-root-version"
 
             -   name: "Check out custom actions"
-                uses: "actions/checkout@v3"
+                uses: "actions/checkout@v4"
                 with:
                     repository: "isign-dev/github-actions"
                     path: "./.github/actions/custom-actions"
@@ -115,7 +115,7 @@ jobs:
                 uses: "./.github/actions/custom-actions/.github/actions/composer-require-replacements"
 
             -   name: "Install dependencies with Composer"
-                uses: "ramsey/composer-install@v2"
+                uses: "ramsey/composer-install@v3"
                 env:
                     SYMFONY_REQUIRE: "${{ inputs.symfony-version }}"
                 with:
